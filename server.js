@@ -57,6 +57,12 @@ io.on("connection", (socket) => {
     const user = users.find(u => u.token === token);
     if (user) {
       socket.domain = user.domain;
+      // Notify other clients on the same domain that a user connected
+      io.sockets.sockets.forEach((s) => {
+        if (s.domain === socket.domain && s !== socket) {
+          s.emit('userConnected');
+        }
+      });
     }
     socket.emit('token', 'connected');
   });
@@ -66,6 +72,12 @@ io.on("connection", (socket) => {
     if (token === null) {
         console.log("token is null");
     } else {
+        // Notify other clients on the same domain that a user disconnected
+        io.sockets.sockets.forEach((s) => {
+          if (s.domain === socket.domain && s !== socket) {
+            s.emit('userDisconnected');
+          }
+        });
         // if there was a token remove it from the users array
         const user = users.find((user) => user.token === token);
         if (user) {

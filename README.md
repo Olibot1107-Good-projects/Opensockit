@@ -41,6 +41,15 @@ sockit.getSocket().onAny((event, ...args) => {
     console.log(`Received ${event}:`, ...args);
   }
 });
+
+// Listen for user connection/disconnection events
+sockit.getSocket().on('userConnected', () => {
+  console.log('A user connected to this domain');
+});
+
+sockit.getSocket().on('userDisconnected', () => {
+  console.log('A user disconnected from this domain');
+});
 ```
 
 ## Basic Chat Example
@@ -84,3 +93,7 @@ sockit.getSocket().onAny((event, ...args) => {
 - `disconnect()` - Disconnect from server
 
 Messages are automatically isolated by domain - only clients from the same website can communicate. You can send and receive any socket event except 'token'.
+
+Automatic Events:
+- `userConnected` - Emitted when a new user connects to the same domain
+- `userDisconnected` - Emitted when a user disconnects from the same domain
