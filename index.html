@@ -12,7 +12,7 @@
     <button onclick="sendMessage()">Send</button>
     <div id="messages"></div>
     <script type="module">
-        import opensockit from 'http://localhost:3000/opensockit.js';
+        import opensockit from 'https://opensockit.onrender.com/opensockit.js';
         const sockit = new opensockit();
         sockit.connect().then(() => {
             document.getElementById('status').textContent = 'Connected!';
