@@ -20,7 +20,7 @@ app.use(cors());
 app.use(express.static('public'));
 
 app.get("/token", (req, res) => {
-    const domain = req.headers.host
+    const domain = req.query.domain || req.headers.host
     console.log(`User is requesting token from ${domain}`);
     console.log("User is requesting token");
     const token = rtoken.makeLongRandomString();
@@ -31,7 +31,7 @@ app.get("/token", (req, res) => {
 });
 
 app.get("/tokenupdate", (req, res) => {
-    const domain = req.headers.host
+    const domain = req.query.domain || req.headers.host
     // get ?token=token bit
     const tokenn = req.query.token;
     // update there time to 20

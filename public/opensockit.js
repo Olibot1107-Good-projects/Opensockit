@@ -9,7 +9,7 @@ class opensockit {
   }
 
   async connect() {
-    const res = await fetch(`${this.url}/token`);
+    const res = await fetch(`${this.url}/token?domain=${encodeURIComponent(window.location.origin)}`);
     this.token = await res.text();
 
     this.socket = io(this.url);
@@ -19,7 +19,7 @@ class opensockit {
       this.socket.on('token', (msg) => {
         if (msg === 'connected') {
           this.interval = setInterval(() => {
-            fetch(`${this.url}/tokenupdate?token=${this.token}`);
+            fetch(`${this.url}/tokenupdate?token=${this.token}&domain=${encodeURIComponent(window.location.origin)}`);
           }, 5000);
           resolve();
         }
