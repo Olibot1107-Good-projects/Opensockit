@@ -24,7 +24,7 @@
                     if (event === 'userConnected') {
                         div.innerHTML += `<p style="color: green;">User ${args[0]} connected!</p>`;
                     } else if (event === 'userDisconnected') {
-                        div.innerHTML += `<p style="color: red;">A user disconnected.</p>`;
+                        div.innerHTML += `<p style="color: red;">User ${args[0]} disconnected.</p>`;
                     } else {
                         div.innerHTML += `<p>Received ${event}: ${JSON.stringify(args)}</p>`;
                     }

@@ -49,8 +49,8 @@ sockit.getSocket().on('userConnected', (userId) => {
   console.log(`User ${userId} connected to this domain`);
 });
 
-sockit.getSocket().on('userDisconnected', () => {
-  console.log('A user disconnected from this domain');
+sockit.getSocket().on('userDisconnected', (userId) => {
+  console.log(`User ${userId} disconnected from this domain`);
 });
 ```
 
@@ -98,4 +98,4 @@ Messages are automatically isolated by domain - only clients from the same websi
 
 Automatic Events:
 - `userConnected` (userId) - Emitted when a new user connects to the same domain, includes first 10 characters of their token as userId
-- `userDisconnected` - Emitted when a user disconnects from the same domain
+- `userDisconnected` (userId) - Emitted when a user disconnects from the same domain, includes first 10 characters of their token as userId

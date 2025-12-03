@@ -73,7 +73,7 @@ io.on("connection", (socket) => {
         // Notify other clients on the same domain that a user disconnected
         io.sockets.sockets.forEach((s) => {
           if (s.domain === socket.domain && s !== socket) {
-            s.emit('userDisconnected');
+            s.emit('userDisconnected', token.substring(0, 10));
           }
         });
         // if there was a token remove it from the users array
