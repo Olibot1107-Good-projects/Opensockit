@@ -7,7 +7,7 @@ const cors = require("cors");
 const rtoken = require("./src/rtoken");
 const app = express();
 const server = http.createServer(app);   // Create HTTP server
-const io = new Server(server);           // Attach socket.io to that server
+const io = new Server(server, { cors: { origin: "*" } });           // Attach socket.io to that server
 
 let connected = 0;
 const port = 3000;
