@@ -2,6 +2,8 @@
 
 A simple library for real-time messaging between clients on the same domain.
 
+**Server Logging:** Only authenticated users (with valid tokens) generate connection/disconnection logs, including their domain information.
+
 ## Connect
 
 ```javascript
@@ -43,8 +45,8 @@ sockit.getSocket().onAny((event, ...args) => {
 });
 
 // Listen for user connection/disconnection events
-sockit.getSocket().on('userConnected', () => {
-  console.log('A user connected to this domain');
+sockit.getSocket().on('userConnected', (userId) => {
+  console.log(`User ${userId} connected to this domain`);
 });
 
 sockit.getSocket().on('userDisconnected', () => {
@@ -95,5 +97,5 @@ sockit.getSocket().on('userDisconnected', () => {
 Messages are automatically isolated by domain - only clients from the same website can communicate. You can send and receive any socket event except 'token'.
 
 Automatic Events:
-- `userConnected` - Emitted when a new user connects to the same domain
+- `userConnected` (userId) - Emitted when a new user connects to the same domain, includes first 10 characters of their token as userId
 - `userDisconnected` - Emitted when a user disconnects from the same domain

@@ -8,6 +8,7 @@
 <body>
     <h1>OpenSockit Test</h1>
     <div id="status">Connecting...</div>
+    <p><strong>Automatic Events:</strong> User connections/disconnections will appear below in green/red.</p>
     <input type="text" id="eventInput" placeholder="Event type" value="message">
     <input type="text" id="messageInput" placeholder="Type a message">
     <button onclick="sendMessage()">Send</button>
@@ -20,7 +21,13 @@
             sockit.getSocket().onAny((event, ...args) => {
                 if (event !== 'token') {
                     const div = document.getElementById('messages');
-                    div.innerHTML += `<p>Received ${event}: ${JSON.stringify(args)}</p>`;
+                    if (event === 'userConnected') {
+                        div.innerHTML += `<p style="color: green;">User ${args[0]} connected!</p>`;
+                    } else if (event === 'userDisconnected') {
+                        div.innerHTML += `<p style="color: red;">A user disconnected.</p>`;
+                    } else {
+                        div.innerHTML += `<p>Received ${event}: ${JSON.stringify(args)}</p>`;
+                    }
                 }
             });
         }).catch((error) => {

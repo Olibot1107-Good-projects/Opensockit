@@ -48,7 +48,6 @@ app.get("/tokenupdate", (req, res) => {
 io.on("connection", (socket) => {
   let token = null;
   connected++;
-  console.log("a user connected");
 
   // if they dont send the token in 10s dissconect them
   socket.once("token", (receivedToken) => {
@@ -57,10 +56,11 @@ io.on("connection", (socket) => {
     const user = users.find(u => u.token === token);
     if (user) {
       socket.domain = user.domain;
+      console.log(`User connected from domain: ${user.domain}`);
       // Notify other clients on the same domain that a user connected
       io.sockets.sockets.forEach((s) => {
         if (s.domain === socket.domain && s !== socket) {
-          s.emit('userConnected');
+          s.emit('userConnected', token.substring(0, 10));
         }
       });
     }
@@ -68,10 +68,8 @@ io.on("connection", (socket) => {
   });
   socket.on("disconnect", () => {
     connected--;
-    console.log("a user disconnected");
-    if (token === null) {
-        console.log("token is null");
-    } else {
+    if (token !== null) {
+        console.log(`User disconnected from domain: ${socket.domain}`);
         // Notify other clients on the same domain that a user disconnected
         io.sockets.sockets.forEach((s) => {
           if (s.domain === socket.domain && s !== socket) {
