@@ -8,6 +8,7 @@ const rtoken = require("./src/rtoken");
 const app = express();
 const server = http.createServer(app);   // Create HTTP server
 const io = new Server(server, { cors: { origin: "*" } });           // Attach socket.io to that server
+const https = require("https");
 
 let connected = 0;
 const port = 3000;
@@ -16,6 +17,34 @@ let users = [];
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "index.html"));
 });
+
+function pingGoogle() {
+  return new Promise((resolve) => {
+    const start = Date.now();
+    const req = https.get("https://www.google.com", (res) => {
+      const ping = Date.now() - start;
+      resolve(ping);
+      res.resume(); // discard data
+    });
+
+    req.on("error", () => resolve(null)); // in case Google blocks ping
+    req.setTimeout(5000, () => resolve(null));
+  });
+}
+
+app.get("/info", async (req, res) => {
+  const googlePing = await pingGoogle();
+
+  const info = {
+    connectedSockets: connected,
+    activeUsers: users.length,
+    googlePingMs: googlePing
+  };
+
+  res.json(info);
+});
+
+
 app.use(cors());
 app.use(express.static('public'));
 
