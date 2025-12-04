@@ -1,3 +1,4 @@
+console.log("OpenSockit Started")
 const express = require("express");
 const http = require("http");
 const { Server } = require("socket.io");
@@ -9,31 +10,34 @@ const app = express();
 const server = http.createServer(app);   // Create HTTP server
 const io = new Server(server, { cors: { origin: "*" } });           // Attach socket.io to that server
 const https = require("https");
-
+const config = require('./config.json')
 let connected = 0;
-const port = 3000;
+const port = config.port;
 let users = [];
 // HTTP route
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "index.html"));
 });
 
-function pingGoogle() {
+function ping() {
   return new Promise((resolve) => {
     const start = Date.now();
-    const req = https.get("https://www.google.com", (res) => {
+    const req = https.get(`${config.ping_server}`, (res) => {
       const ping = Date.now() - start;
       resolve(ping);
       res.resume(); // discard data
     });
 
-    req.on("error", () => resolve(null)); // in case Google blocks ping
+    req.on("error", () => resolve(null));
     req.setTimeout(5000, () => resolve(null));
   });
 }
 
 app.get("/info", async (req, res) => {
-  const googlePing = await pingGoogle();
+  let googlePing = "off"
+  if (config.ping == "1") {
+    googlePing = await ping()
+  }
 
   const info = {
     connectedSockets: connected,

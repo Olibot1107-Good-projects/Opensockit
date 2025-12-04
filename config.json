@@ -1,0 +1,5 @@
+{
+    "port": 3000,
+    "ping_server": "https://www.google.com",
+    "ping": "1"
+}
